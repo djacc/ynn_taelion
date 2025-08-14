@@ -1,7 +1,7 @@
 class_name VNBaseUI
 extends Control
 
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Base properties for all VN UI elements
 var is_visible: bool = false

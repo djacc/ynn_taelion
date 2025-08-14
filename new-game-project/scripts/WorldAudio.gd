@@ -2,7 +2,7 @@ class_name WorldAudio
 extends Control
 
 # Debug settings
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Volume controls (exposed for easy adjustment)
 @export var bgm_volume: float = 0.8

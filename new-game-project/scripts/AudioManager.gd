@@ -2,7 +2,7 @@ class_name AudioManager
 extends Node
 
 # Debug settings
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Master volume controls
 @export var master_volume: float = 1.0

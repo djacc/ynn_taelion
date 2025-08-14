@@ -2,7 +2,7 @@ extends Node
 class_name SpawnManager
 
 # Debug settings
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Spawn settings
 @export var default_spawn_reference: String = "default"  # Default portal reference to use

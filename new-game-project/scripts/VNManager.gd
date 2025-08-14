@@ -1,7 +1,7 @@
 class_name VNManager
 extends Node
 
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Manager properties
 var is_active: bool = false
