@@ -67,18 +67,18 @@ func test_basic_functions():
 		print("DEBUG: - Current UI elements count: ", current_ui_elements.size())
 		print("DEBUG: VNManager ready for testing!")
 		
-	# Test VNBaseUI if it exists
+		# Test VNBaseUI if it exists
 	if current_ui_elements.size() > 0:
 		var vn_base_ui = current_ui_elements[0]
 		if debug_prints:
 			print("DEBUG: Testing VNBaseUI functionality...")
 		vn_base_ui.test_basic_functions()
 		
-		# Test showing/hiding the UI
+		# Test showing the UI (keep it visible)
 		if debug_prints:
-			print("DEBUG: Testing UI visibility toggle...")
+			print("DEBUG: Testing UI visibility...")
 		vn_base_ui.show_ui()
-		vn_base_ui.hide_ui()
+		# Don't hide it - keep it visible for testing
 
 # Placeholder functions for future UI management
 func show_ui_element(ui_element: VNBaseUI):
