@@ -14,8 +14,8 @@ func _ready():
 	# Start inactive by default
 	is_active = false
 	
-	# Create VNBaseUI directly
-	create_vn_base_ui()
+	# Connect to player spawn signal for camera tracking
+	connect_to_player_spawn_signal()
 	
 	test_basic_functions()
 
@@ -37,10 +37,77 @@ func is_vn_system_active() -> bool:
 
 
 
-func create_vn_base_ui():
-	"""Create VNBaseUI and add as child of VNManager"""
+func connect_to_player_spawn_signal():
+	"""Connect to the player spawn signal for camera tracking"""
 	if debug_prints:
-		print("DEBUG: Creating VNBaseUI...")
+		print("DEBUG: Attempting to connect to player spawn signal...")
+	
+	# Try to connect to the signal from the SpawnManager
+	var spawn_manager = get_node_or_null("../SpawnManager")
+	if spawn_manager and spawn_manager.has_signal("player_spawned"):
+		spawn_manager.connect("player_spawned", _on_player_spawned)
+		if debug_prints:
+			print("DEBUG: Connected to SpawnManager player_spawned signal")
+	else:
+		if debug_prints:
+			print("WARNING: SpawnManager or player_spawned signal not found")
+			print("DEBUG: Will try to connect later...")
+
+func _on_player_spawned(player_node: Node):
+	"""Called when player is spawned - create VNBaseUI and attach to camera"""
+	if debug_prints:
+		print("DEBUG: Player spawned signal received: ", player_node.name)
+	
+	# Create VNBaseUI and attach to the player's camera
+	create_vn_base_ui_for_player(player_node)
+
+func create_vn_base_ui_for_player(player_node: Node):
+	"""Create VNBaseUI and attach to the specific player's camera"""
+	if debug_prints:
+		print("DEBUG: Creating VNBaseUI for player: ", player_node.name)
+	
+	# Look for Camera2D as a child of the player
+	var camera = player_node.get_node_or_null("Camera2D")
+	if camera:
+		if debug_prints:
+			print("DEBUG: Found player camera: ", camera.name)
+		
+		# Create and attach VNBaseUI to the camera
+		create_vn_base_ui_at_camera(camera)
+	else:
+		if debug_prints:
+			print("ERROR: No Camera2D found as child of player")
+
+func create_vn_base_ui_at_camera(camera: Camera2D):
+	"""Create VNBaseUI and attach to the specified camera"""
+	if debug_prints:
+		print("DEBUG: Creating VNBaseUI at camera: ", camera.name)
+	
+	# Load the VNBaseUI scene
+	var vn_base_ui_scene = load("res://scenes/VN/VNBaseUI.tscn")
+	if vn_base_ui_scene:
+		# Instantiate the scene
+		var vn_base_ui = vn_base_ui_scene.instantiate()
+		
+		# Add VNBaseUI as a child of the camera (this makes it follow the camera)
+		camera.add_child(vn_base_ui)
+		if debug_prints:
+			print("DEBUG: VNBaseUI attached to camera: ", camera.name)
+		
+		# Add to current UI elements array
+		current_ui_elements.append(vn_base_ui)
+		
+		if debug_prints:
+			print("DEBUG: VNBaseUI created and added successfully: ", vn_base_ui.name)
+			print("DEBUG: VNBaseUI is visible: ", vn_base_ui.is_ui_visible())
+	else:
+		if debug_prints:
+			print("ERROR: Failed to load VNBaseUI scene")
+
+func create_vn_base_ui():
+	"""Create VNBaseUI and add as child of VNManager (fallback method)"""
+	if debug_prints:
+		print("DEBUG: Creating VNBaseUI as fallback...")
 	
 	# Load the VNBaseUI scene
 	var vn_base_ui_scene = load("res://scenes/VN/VNBaseUI.tscn")
