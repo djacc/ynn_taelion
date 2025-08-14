@@ -14,8 +14,12 @@ func _ready():
 	# Start inactive by default
 	is_active = false
 	
-	# Create and add VNBaseUI scene
-	create_vn_base_ui()
+	# Listen for player spawn signal
+	connect_to_player_spawn_signal()
+	
+	# Don't create VNBaseUI yet - wait for player spawn
+	if debug_prints:
+		print("DEBUG: Waiting for player spawn signal...")
 	
 	test_basic_functions()
 
@@ -35,42 +39,51 @@ func is_vn_system_active() -> bool:
 	"""Check if VN system is active"""
 	return is_active
 
-func find_player_camera() -> Camera2D:
-	"""Find the player's Camera2D node"""
+func connect_to_player_spawn_signal():
+	"""Connect to the player spawn signal"""
 	if debug_prints:
-		print("DEBUG: Looking for player camera...")
+		print("DEBUG: Attempting to connect to player spawn signal...")
 	
-	# Try to find the player node first
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
+	# Try to connect to the signal from the SpawnManager
+	var spawn_manager = get_node_or_null("../SpawnManager")
+	if spawn_manager and spawn_manager.has_signal("player_spawned"):
+		spawn_manager.connect("player_spawned", _on_player_spawned)
 		if debug_prints:
-			print("DEBUG: Found player: ", player.name)
-		
-		# Look for Camera2D as a child of the player
-		var camera = player.get_node_or_null("Camera2D")
-		if camera:
-			if debug_prints:
-				print("DEBUG: Found player camera: ", camera.name)
-			return camera
-		else:
-			if debug_prints:
-				print("DEBUG: No Camera2D found as child of player")
-	
-	# Alternative: search for any Camera2D in the scene
-	var cameras = get_tree().get_nodes_in_group("camera")
-	if cameras.size() > 0:
+			print("DEBUG: Connected to SpawnManager player_spawned signal")
+	else:
 		if debug_prints:
-			print("DEBUG: Found camera in camera group: ", cameras[0].name)
-		return cameras[0]
-	
-	if debug_prints:
-		print("DEBUG: No player camera found")
-	return null
+			print("WARNING: SpawnManager or player_spawned signal not found")
+			print("DEBUG: Will try to connect later...")
 
-func create_vn_base_ui():
-	"""Create and add VNBaseUI scene to the player's camera"""
+func _on_player_spawned(player_node: Node):
+	"""Called when player is spawned"""
 	if debug_prints:
-		print("DEBUG: Creating VNBaseUI scene...")
+		print("DEBUG: Player spawned signal received: ", player_node.name)
+	
+	# Now create and attach VNBaseUI to the player's camera
+	create_vn_base_ui_for_player(player_node)
+
+func create_vn_base_ui_for_player(player_node: Node):
+	"""Create VNBaseUI and attach to the specific player's camera"""
+	if debug_prints:
+		print("DEBUG: Creating VNBaseUI for player: ", player_node.name)
+	
+	# Look for Camera2D as a child of the player
+	var camera = player_node.get_node_or_null("Camera2D")
+	if camera:
+		if debug_prints:
+			print("DEBUG: Found player camera: ", camera.name)
+		
+		# Create and attach VNBaseUI to the camera
+		create_vn_base_ui_at_camera(camera)
+	else:
+		if debug_prints:
+			print("ERROR: No Camera2D found as child of player")
+
+func create_vn_base_ui_at_camera(camera: Camera2D):
+	"""Create VNBaseUI and attach to the specified camera"""
+	if debug_prints:
+		print("DEBUG: Creating VNBaseUI at camera: ", camera.name)
 	
 	# Load the VNBaseUI scene
 	var vn_base_ui_scene = load("res://scenes/VN/VNBaseUI.tscn")
@@ -78,18 +91,10 @@ func create_vn_base_ui():
 		# Instantiate the scene
 		var vn_base_ui = vn_base_ui_scene.instantiate()
 		
-		# Find the player's camera to attach the UI
-		var player_camera = find_player_camera()
-		if player_camera:
-			# Add VNBaseUI as a child of the player's camera
-			player_camera.add_child(vn_base_ui)
-			if debug_prints:
-				print("DEBUG: VNBaseUI attached to player camera: ", player_camera.name)
-		else:
-			# Fallback: add to VNManager if camera not found
-			add_child(vn_base_ui)
-			if debug_prints:
-				print("WARNING: Player camera not found, VNBaseUI added to VNManager")
+		# Add VNBaseUI as a child of the camera
+		camera.add_child(vn_base_ui)
+		if debug_prints:
+			print("DEBUG: VNBaseUI attached to camera: ", camera.name)
 		
 		# Add to current UI elements array
 		current_ui_elements.append(vn_base_ui)
@@ -100,6 +105,12 @@ func create_vn_base_ui():
 	else:
 		if debug_prints:
 			print("ERROR: Failed to load VNBaseUI scene")
+
+func create_vn_base_ui():
+	"""Legacy function - now handled by signal-based system"""
+	if debug_prints:
+		print("DEBUG: create_vn_base_ui() called - this is now handled by signal system")
+		print("DEBUG: VNBaseUI will be created when player spawns")
 
 func test_basic_functions():
 	"""Test basic manager functionality"""
