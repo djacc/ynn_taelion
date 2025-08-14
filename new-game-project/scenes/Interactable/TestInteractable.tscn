@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqx8y7n6k8nap"]
+
+[ext_resource type="Script" uid="uid://dqwxdrowutix3" path="res://scripts/Interactable.gd" id="1_interactable"]
+[ext_resource type="PackedScene" uid="uid://cekfexqr0urex" path="res://scenes/NodeToGrid.tscn" id="2_nodegrid"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(32, 32)
+
+[node name="TestInteractable" type="Area2D"]
+collision_layer = 2
+script = ExtResource("1_interactable")
+debug_prints = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="NodeToGrid" parent="." instance=ExtResource("2_nodegrid")]

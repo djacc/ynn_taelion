@@ -1,0 +1,44 @@
+# Godot-specific ignores
+.godot/
+.import/
+export_presets.cfg
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build files
+build/
+dist/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Audio files (if you want to exclude them)
+# *.ogg
+# *.wav
+# *.mp3
+
+# Image files (if you want to exclude them)
+# *.png
+# *.jpg
+# *.jpeg
+# *.webp

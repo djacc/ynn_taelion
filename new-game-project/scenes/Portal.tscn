@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dxj5i252jk10k"]
+
+[ext_resource type="Script" uid="uid://dllcimxhwjffj" path="res://scripts/Portal.gd" id="1_portal"]
+[ext_resource type="PackedScene" uid="uid://cekfexqr0urex" path="res://scenes/NodeToGrid.tscn" id="2_nodegrid"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(128, 128)
+
+[node name="Portal" type="Node2D"]
+script = ExtResource("1_portal")
+debug_prints = false
+
+[node name="NodeToGrid" parent="." instance=ExtResource("2_nodegrid")]
+
+[node name="TriggerArea" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerArea"]
+scale = Vector2(0.1, 0.1)
+shape = SubResource("RectangleShape2D_1")
