@@ -35,8 +35,40 @@ func is_vn_system_active() -> bool:
 	"""Check if VN system is active"""
 	return is_active
 
+func find_player_camera() -> Camera2D:
+	"""Find the player's Camera2D node"""
+	if debug_prints:
+		print("DEBUG: Looking for player camera...")
+	
+	# Try to find the player node first
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		if debug_prints:
+			print("DEBUG: Found player: ", player.name)
+		
+		# Look for Camera2D as a child of the player
+		var camera = player.get_node_or_null("Camera2D")
+		if camera:
+			if debug_prints:
+				print("DEBUG: Found player camera: ", camera.name)
+			return camera
+		else:
+			if debug_prints:
+				print("DEBUG: No Camera2D found as child of player")
+	
+	# Alternative: search for any Camera2D in the scene
+	var cameras = get_tree().get_nodes_in_group("camera")
+	if cameras.size() > 0:
+		if debug_prints:
+			print("DEBUG: Found camera in camera group: ", cameras[0].name)
+		return cameras[0]
+	
+	if debug_prints:
+		print("DEBUG: No player camera found")
+	return null
+
 func create_vn_base_ui():
-	"""Create and add VNBaseUI scene to the manager"""
+	"""Create and add VNBaseUI scene to the player's camera"""
 	if debug_prints:
 		print("DEBUG: Creating VNBaseUI scene...")
 	
@@ -46,8 +78,18 @@ func create_vn_base_ui():
 		# Instantiate the scene
 		var vn_base_ui = vn_base_ui_scene.instantiate()
 		
-		# Add it as a child of the VNManager
-		add_child(vn_base_ui)
+		# Find the player's camera to attach the UI
+		var player_camera = find_player_camera()
+		if player_camera:
+			# Add VNBaseUI as a child of the player's camera
+			player_camera.add_child(vn_base_ui)
+			if debug_prints:
+				print("DEBUG: VNBaseUI attached to player camera: ", player_camera.name)
+		else:
+			# Fallback: add to VNManager if camera not found
+			add_child(vn_base_ui)
+			if debug_prints:
+				print("WARNING: Player camera not found, VNBaseUI added to VNManager")
 		
 		# Add to current UI elements array
 		current_ui_elements.append(vn_base_ui)

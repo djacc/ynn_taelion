@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvnbaseui001"]
+[gd_scene load_steps=3 format=3 uid="uid://bvnbaseui001"]
 
 [ext_resource type="Script" uid="uid://cr6h2lx6dlubc" path="res://scripts/VNBaseUI.gd" id="1_vnbaseui"]
+[ext_resource type="PackedScene" uid="uid://dlekl3d7vhbec" path="res://scenes/VN/DialogueBox.tscn" id="2_kiomx"]
 
 [node name="VNBaseUI" type="Control"]
 layout_mode = 3
@@ -35,3 +36,6 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "VNBaseUI Active"
 horizontal_alignment = 1
+
+[node name="DialogueBox" parent="." instance=ExtResource("2_kiomx")]
+layout_mode = 1
