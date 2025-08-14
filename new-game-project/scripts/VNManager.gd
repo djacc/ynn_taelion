@@ -6,7 +6,6 @@ extends Node
 # Manager properties
 var is_active: bool = false
 var current_ui_elements: Array[VNBaseUI] = []
-var vn_base_ui: VNBaseUI = null
 
 func _ready():
 	if debug_prints:
@@ -45,7 +44,7 @@ func create_vn_base_ui():
 	var vn_base_ui_scene = load("res://scenes/VN/VNBaseUI.tscn")
 	if vn_base_ui_scene:
 		# Instantiate the scene
-		vn_base_ui = vn_base_ui_scene.instantiate()
+		var vn_base_ui = vn_base_ui_scene.instantiate()
 		
 		# Add it as a child of the VNManager
 		add_child(vn_base_ui)
@@ -69,7 +68,8 @@ func test_basic_functions():
 		print("DEBUG: VNManager ready for testing!")
 		
 	# Test VNBaseUI if it exists
-	if vn_base_ui:
+	if current_ui_elements.size() > 0:
+		var vn_base_ui = current_ui_elements[0]
 		if debug_prints:
 			print("DEBUG: Testing VNBaseUI functionality...")
 		vn_base_ui.test_basic_functions()
