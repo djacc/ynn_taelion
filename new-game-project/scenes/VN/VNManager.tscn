@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvnmanager001"]
+
+[ext_resource type="Script" path="res://scripts/VNManager.gd" id="1_vnmanager"]
+
+[node name="VNManager" type="Node"]
+script = ExtResource("1_vnmanager")
+debug_prints = true
