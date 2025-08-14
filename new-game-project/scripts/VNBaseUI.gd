@@ -10,6 +10,9 @@ var is_active: bool = false
 func _ready():
 	if debug_prints:
 		print("DEBUG: VNBaseUI initialized: ", name)
+		print("DEBUG: VNBaseUI position: ", global_position)
+		print("DEBUG: VNBaseUI size: ", size)
+		print("DEBUG: VNBaseUI parent: ", get_parent().name if get_parent() else "None")
 	
 	# Start visible by default for testing
 	visible = true
