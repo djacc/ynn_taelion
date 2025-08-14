@@ -4,11 +4,11 @@ class_name SpawnManager
 # Debug settings
 @export var debug_prints: bool = true
 
-# Spawn settings
-@export var default_spawn_reference: String = "default"  # Default portal reference to use
-
 # Signals
 signal player_spawned(player_node: Node)
+
+# Spawn settings
+@export var default_spawn_reference: String = "default"  # Default portal reference to use
 
 
 

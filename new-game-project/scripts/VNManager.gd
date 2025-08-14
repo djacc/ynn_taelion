@@ -14,7 +14,7 @@ func _ready():
 	# Start inactive by default
 	is_active = false
 	
-	# Connect to player spawn signal for camera tracking
+	# Connect to player spawn signal to attach VNBaseUI to camera
 	connect_to_player_spawn_signal()
 	
 	test_basic_functions()
@@ -35,10 +35,8 @@ func is_vn_system_active() -> bool:
 	"""Check if VN system is active"""
 	return is_active
 
-
-
 func connect_to_player_spawn_signal():
-	"""Connect to the player spawn signal for camera tracking"""
+	"""Connect to the player spawn signal"""
 	if debug_prints:
 		print("DEBUG: Attempting to connect to player spawn signal...")
 	
@@ -104,10 +102,12 @@ func create_vn_base_ui_at_camera(camera: Camera2D):
 		if debug_prints:
 			print("ERROR: Failed to load VNBaseUI scene")
 
+
+
 func create_vn_base_ui():
-	"""Create VNBaseUI and add as child of VNManager (fallback method)"""
+	"""Create VNBaseUI and add as child of VNManager"""
 	if debug_prints:
-		print("DEBUG: Creating VNBaseUI as fallback...")
+		print("DEBUG: Creating VNBaseUI...")
 	
 	# Load the VNBaseUI scene
 	var vn_base_ui_scene = load("res://scenes/VN/VNBaseUI.tscn")
