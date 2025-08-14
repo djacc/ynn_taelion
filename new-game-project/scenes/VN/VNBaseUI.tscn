@@ -12,15 +12,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vnbaseui")
 
-[node name="Background" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.1, 0.3, 0.6, 0.3)
-
 [node name="DialogueBox" parent="." instance=ExtResource("2_kiomx")]
 layout_mode = 1
-offset_bottom = -1104.0
+anchors_preset = 12
+anchor_top = 1.0
+grow_vertical = 0
