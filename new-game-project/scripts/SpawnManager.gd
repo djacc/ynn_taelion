@@ -2,13 +2,12 @@ extends Node
 class_name SpawnManager
 
 # Debug settings
-@export var debug_prints: bool = true
+@export var debug_prints: bool = false
 
 # Spawn settings
 @export var default_spawn_reference: String = "default"  # Default portal reference to use
 
-# Signals
-signal player_spawned(player_node: Node)
+
 
 # References
 var player: Node2D
@@ -370,10 +369,7 @@ func _finish_player_spawn(spawn_direction: Vector2 = Vector2.DOWN):
 			print("Player tile: ", player.node_to_grid.get_current_tile())
 			print("Player facing: ", spawn_direction)
 		
-		# Emit player spawned signal for VN system
-		player_spawned.emit(player)
-		if debug_prints:
-			print("VN SIGNAL: player_spawned emitted for: ", player.name)
+
 	else:
 		if debug_prints:
 			print("ERROR: Player or NodeToGrid not found during spawn completion!")
