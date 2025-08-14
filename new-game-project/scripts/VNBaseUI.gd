@@ -11,10 +11,10 @@ func _ready():
 	if debug_prints:
 		print("DEBUG: VNBaseUI initialized: ", name)
 	
-	# Start hidden by default
-	visible = false
-	is_visible = false
-	is_active = false
+	# Start visible by default for testing
+	visible = true
+	is_visible = true
+	is_active = true
 
 func show_ui():
 	"""Show this UI element"""
