@@ -1,9 +1,6 @@
 class_name WorldAudio
 extends Control
 
-# Debug settings
-@export var debug_prints: bool = true
-
 # Volume controls (exposed for easy adjustment)
 @export var bgm_volume: float = 0.8
 @export var sfx_volume: float = 1.0
@@ -24,9 +21,6 @@ var fade_tween: Tween
 var audio_manager: AudioManager
 
 func _ready():
-	if debug_prints:
-		print("DEBUG: WorldAudio initialized for: ", name)
-	
 	setup_audio_nodes()
 	setup_audio_manager_connection()
 	
@@ -48,14 +42,11 @@ func setup_audio_nodes():
 	sfx_player.volume_db = linear_to_db(sfx_volume)
 	sfx_player.bus = "Master"
 	add_child(sfx_player)
-	
-	if debug_prints:
-		print("DEBUG: Audio nodes created - BGM: ", bgm_player.name, ", SFX: ", sfx_player.name)
 
 func setup_audio_manager_connection():
 	"""Connect to AudioManager signals"""
-	# Find AudioManager in the scene tree
-	audio_manager = get_node("/root/AudioManager")
+	# Find AudioManager under Main
+	audio_manager = get_node("/root/Main/AudioManager")
 	if audio_manager == null:
 		# Try to find it in the current scene
 		audio_manager = get_tree().get_first_node_in_group("audio_manager")
@@ -64,26 +55,20 @@ func setup_audio_manager_connection():
 		audio_manager.master_volume_changed.connect(_on_master_volume_changed)
 		audio_manager.bgm_volume_changed.connect(_on_bgm_volume_changed)
 		audio_manager.sfx_volume_changed.connect(_on_sfx_volume_changed)
-		
-		if debug_prints:
-			print("DEBUG: Connected to AudioManager signals")
 	else:
-		if debug_prints:
-			print("WARNING: AudioManager not found")
+		print("WARNING: WorldAudio '", name, "' could not find AudioManager")
 
 func register_with_audio_manager():
 	"""Register this world audio with the global AudioManager"""
 	if audio_manager:
 		audio_manager.register_world_audio(self)
-		if debug_prints:
-			print("DEBUG: Registered with AudioManager")
+	else:
+		print("WARNING: WorldAudio '", name, "' cannot register - AudioManager not found")
 
 func _exit_tree():
 	"""Cleanup when the world audio is removed"""
 	if audio_manager:
 		audio_manager.unregister_world_audio()
-		if debug_prints:
-			print("DEBUG: Unregistered from AudioManager")
 
 func play_bgm(stream: AudioStream, fade_in: bool = true):
 	"""Play background music"""
@@ -91,8 +76,7 @@ func play_bgm(stream: AudioStream, fade_in: bool = true):
 		return
 	
 	if stream == null:
-		if debug_prints:
-			print("WARNING: Attempted to play null BGM stream")
+		print("WARNING: WorldAudio '", name, "' attempted to play null BGM stream")
 		return
 	
 	current_bgm_stream = stream
@@ -109,9 +93,6 @@ func play_bgm(stream: AudioStream, fade_in: bool = true):
 	else:
 		bgm_player.volume_db = linear_to_db(bgm_volume)
 		bgm_player.play()
-	
-	if debug_prints:
-		print("DEBUG: Playing BGM: ", stream.resource_path)
 
 func play_sfx(stream: AudioStream):
 	"""Play sound effect"""
@@ -119,15 +100,11 @@ func play_sfx(stream: AudioStream):
 		return
 	
 	if stream == null:
-		if debug_prints:
-			print("WARNING: Attempted to play null SFX stream")
+		print("WARNING: WorldAudio '", name, "' attempted to play null SFX stream")
 		return
 	
 	sfx_player.stream = stream
 	sfx_player.play()
-	
-	if debug_prints:
-		print("DEBUG: Playing SFX: ", stream.resource_path)
 
 func stop_bgm(fade_out: bool = true):
 	"""Stop background music"""
@@ -140,9 +117,6 @@ func stop_bgm(fade_out: bool = true):
 		bgm_player.stop()
 	
 	current_bgm_stream = null
-	
-	if debug_prints:
-		print("DEBUG: Stopped BGM")
 
 func set_audio_enabled(enabled: bool):
 	"""Enable or disable audio playback"""
@@ -151,9 +125,6 @@ func set_audio_enabled(enabled: bool):
 	if not enabled:
 		bgm_player.stop()
 		sfx_player.stop()
-	
-	if debug_prints:
-		print("DEBUG: Audio enabled: ", enabled)
 
 func _on_master_volume_changed(volume: float):
 	"""Handle master volume changes from AudioManager"""
@@ -171,17 +142,15 @@ func _on_sfx_volume_changed(volume: float):
 
 func update_volume_levels():
 	"""Update volume levels based on current settings"""
-	if audio_manager:
-		var master_vol = audio_manager.get_master_volume()
-		var bgm_vol = audio_manager.get_bgm_volume()
-		var sfx_vol = audio_manager.get_sfx_volume()
-		
-		bgm_player.volume_db = linear_to_db(bgm_volume * bgm_vol * master_vol)
-		sfx_player.volume_db = linear_to_db(sfx_volume * sfx_vol * master_vol)
-		
-		if debug_prints:
-			print("DEBUG: Updated volume levels - BGM: ", bgm_volume * bgm_vol * master_vol, 
-				", SFX: ", sfx_volume * sfx_vol * master_vol)
+	if not audio_manager:
+		return
+	
+	var master_vol = audio_manager.get_master_volume()
+	var bgm_vol = audio_manager.get_bgm_volume()
+	var sfx_vol = audio_manager.get_sfx_volume()
+	
+	bgm_player.volume_db = linear_to_db(bgm_volume * bgm_vol * master_vol)
+	sfx_player.volume_db = linear_to_db(sfx_volume * sfx_vol * master_vol)
 
 func get_current_bgm() -> AudioStream:
 	"""Get the currently playing BGM stream"""

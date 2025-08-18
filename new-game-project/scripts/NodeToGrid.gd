@@ -20,7 +20,7 @@ func world_to_tile(pos: Vector2) -> Vector2i:
 
 # Convert tile coordinates to world position (center of tile)
 func tile_center_to_world(tile: Vector2i) -> Vector2:
-	return Vector2(tile.x * tile_size + tile_size / 2, tile.y * tile_size + tile_size / 2)
+	return Vector2(tile.x * tile_size + tile_size / 2.0, tile.y * tile_size + tile_size / 2.0)
 
 # Snap the parent node to the nearest tile center
 func snap_parent_to_nearest_tile() -> Vector2:

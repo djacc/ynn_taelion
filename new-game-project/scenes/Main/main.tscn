@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ddkbopntmjq3a" path="res://scripts/AreaManager.gd" id="1_areamanager"]
 [ext_resource type="Script" uid="uid://cb7f6c0qvquw1" path="res://scripts/SpawnManager.gd" id="2_spawnmanager"]
-[ext_resource type="Script" path="res://scripts/AudioManager.gd" id="3_audiomanager"]
+[ext_resource type="Script" uid="uid://d383hxkdvj8k0" path="res://scripts/AudioManager.gd" id="3_audiomanager"]
 
 [node name="Main" type="Node2D"]
 
@@ -15,6 +15,3 @@ script = ExtResource("2_spawnmanager")
 
 [node name="AudioManager" type="Node" parent="."]
 script = ExtResource("3_audiomanager")
-debug_prints = true
-
-
