@@ -128,6 +128,8 @@ func set_audio_enabled(enabled: bool):
 
 func _on_master_volume_changed(volume: float):
 	"""Handle master volume changes from AudioManager"""
+	# Note: volume parameter is required by signal signature but not used directly
+	# as update_volume_levels() gets current values from AudioManager
 	update_volume_levels()
 
 func _on_bgm_volume_changed(volume: float):
